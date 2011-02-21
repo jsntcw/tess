@@ -1,0 +1,9 @@
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\bin\Debug\Tesseract.OCR.AppEntry.exe
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\bin\Debug\Tesseract.OCR.AppEntry.pdb
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\Tesseract.OCR.AppEntry\obj\x86\Debug\ResolveAssemblyReference.cache
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\Tesseract.OCR.AppEntry\obj\x86\Debug\Tesseract.OCR.AppEntry.MainForm.resources
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\Tesseract.OCR.AppEntry\obj\x86\Debug\Tesseract.OCR.AppEntry.Properties.Resources.resources
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\Tesseract.OCR.AppEntry\obj\x86\Debug\Tesseract.OCR.AppEntry.csproj.GenerateResource.Cache
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\Tesseract.OCR.AppEntry\obj\x86\Debug\Tesseract.OCR.AppEntry.exe
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\Tesseract.OCR.AppEntry\obj\x86\Debug\Tesseract.OCR.AppEntry.pdb
+d:\Self-Study\OpenSources\OCR\TesseractEngine\TesseractBasedOCRAnalysis\Tesseract.OCR.AppEntry\obj\x86\Debug\Tesseract.OCR.AppEntry.DlgOptions.resources
