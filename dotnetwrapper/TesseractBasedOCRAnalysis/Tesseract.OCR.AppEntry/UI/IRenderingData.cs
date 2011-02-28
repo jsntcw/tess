@@ -26,5 +26,6 @@ namespace Tesseract.OCR.AppEntry.UI
     {
         Image Image { get; set; }
         bool IsDataChanged { get; set; }
+        void ClearData();
     }
 }

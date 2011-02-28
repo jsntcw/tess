@@ -80,5 +80,15 @@ namespace Tesseract.OCR.AppEntry.UI
         }
 
         #endregion
+
+        #region IRenderingData Members
+
+
+        public virtual void ClearData()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

@@ -44,6 +44,8 @@ namespace Tesseract.OCR.AppEntry.UI
             grph.DrawImage(data.Image, dstRect, srcRect, GraphicsUnit.Pixel);
 
             this.RenderWords(grph, data);
+
+            RenderBlocks(grph, data);
         }
 
         private void RenderWords(System.Drawing.Graphics grph, OCRRenderingData data)
@@ -91,6 +93,21 @@ namespace Tesseract.OCR.AppEntry.UI
             grph.DrawRectangle(data.CharPen,
                 scaleFactor * c.Left, scaleFactor * c.Top,
                 scaleFactor * (c.Right - c.Left), scaleFactor * (c.Bottom - c.Top));
+        }
+
+        private void RenderBlocks(Graphics grph, OCRRenderingData data)
+        {
+            if (!data.ShowDetectedBlocks)
+                return;
+
+            if (data.Blocks != null && data.Blocks.Bounds != null)
+            {
+                Pen pen = data.BlockPen;
+                foreach (RectBound bound in data.Blocks.Bounds)
+                {
+                    grph.DrawRectangle(pen, bound.Left, bound.Top, bound.Right - bound.Left, bound.Bottom - bound.Top);
+                }
+            }
         }
     }
 }

@@ -46,9 +46,13 @@ namespace IPoVn.UI
         }
 
         private void Initialize()
+        {            
+        }
+
+        public void Initialize(IRenderingData renderingData, IRender render)
         {
-            _render = new OCRAnalysisRender(this);
-            _renderingData = new OCRRenderingData();
+            _render = render;
+            _renderingData = renderingData;
         }
         #endregion Constructors and destructors
 

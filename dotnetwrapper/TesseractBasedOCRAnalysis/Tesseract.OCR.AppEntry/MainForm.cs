@@ -94,6 +94,10 @@ namespace Tesseract.OCR.AppEntry
         private void Initialize()
         {
             InitializeMenuItems();
+
+            InitializeToolbarItems();
+            
+            imageViewer.Initialize(new OCRRenderingData(), new OCRAnalysisRender(imageViewer));
         }
 
         private void InitializeMenuItems()
@@ -105,7 +109,21 @@ namespace Tesseract.OCR.AppEntry
                     RegisterMenuItemClickEvent(item as ToolStripMenuItem);
                 }
             }
+
+            detectBlocksToolStripMenuItem.Visible = false;
         }
+
+        private void InitializeToolbarItems()
+        {
+            toolStripButton1.Click += new EventHandler(toolbarButtonClicked);
+            toolStripButton2.Click += new EventHandler(toolbarButtonClicked);
+            toolStripButton3.Click += new EventHandler(toolbarButtonClicked);
+
+
+            toolStripComboBoxLanguage.SelectedIndex = 0;
+            toolStripComboBoxLanguage.Enabled = false;
+
+        }        
 
         private void RegisterMenuItemClickEvent(ToolStripMenuItem item)
         {
@@ -171,6 +189,10 @@ namespace Tesseract.OCR.AppEntry
                 {
                     DoCommandShowOptions();
                 }
+                else if (mnItemName == detectBlocksToolStripMenuItem.Name.Trim().ToLower())
+                {
+                    DoCommandDetectBlocks();
+                }
             }
             catch (System.Exception exp)
             {
@@ -188,7 +210,17 @@ namespace Tesseract.OCR.AppEntry
             {
             }
         }
-                
+
+        void toolbarButtonClicked(object sender, EventArgs e)
+        {
+            if (imageViewer.RenderingData != null &&
+                    imageViewer.RenderingData is OCRRenderingData)
+            {
+                (imageViewer.RenderingData as OCRRenderingData).UpdateFlags(
+                    toolStripButton1.Checked, toolStripButton2.Checked, toolStripButton3.Checked);
+                imageViewer.Invalidate(true);
+            }
+        }
         #endregion Events
 
         #region Commands
@@ -216,6 +248,8 @@ namespace Tesseract.OCR.AppEntry
 
         private void OpenFile(string fileName)
         {
+            ClearRenderingData();
+
             IImage rgbImage = new RGBImage();
 
             string sCommand = SupportedImageActions.Load;
@@ -250,19 +284,103 @@ namespace Tesseract.OCR.AppEntry
 
         private void DoOCR(IImage image)
         {
-            _ocrProcessor.Clear();
-            _ocrProcessor.ClearAdaptiveClassifier();
+            ClearRenderingData();
+            
+            string variable = "tessedit_pageseg_mode";
+            int storedOSD = 0;
+            _ocrProcessor.GetIntVariable(variable, ref storedOSD);
+            try
+            {
+                // Fully automatic page segmentation
+                int fully_psm_auto = 3;
+                _ocrProcessor.SetVariable(variable, fully_psm_auto.ToString());
 
-            using (Image bitmap = ToImage(image))
-            {                
-                //string result = _ocrProcessor.Apply(_fileName);
-                string result = _ocrProcessor.Apply(bitmap);
+                
 
-                List<Word> detectedWords = _ocrProcessor.RetriveResultDetail();
-                this.UpdateImageViewer(detectedWords);
 
-                if (!string.IsNullOrEmpty(result))
-                    MessageBox.Show(result);
+
+                ///// DEMO ONLY
+                using (Image bitmap = ToImage(image))
+                {
+                    ///// DEMO ONLY
+                    _ocrProcessor.Clear();
+                    _ocrProcessor.ClearAdaptiveClassifier();
+                    BlockList blocks = _ocrProcessor.DetectBlocks(bitmap);
+                    this.UpdateImageViewer(blocks);
+
+
+                    ///// DEMO ONLY
+                    _ocrProcessor.Clear();
+                    _ocrProcessor.ClearAdaptiveClassifier();
+                    string result = _ocrProcessor.Apply(bitmap);
+                    List<Word> detectedWords = _ocrProcessor.RetriveResultDetail();
+                    this.UpdateImageViewer(detectedWords);
+
+                    if (!string.IsNullOrEmpty(result))
+                        MessageBox.Show(result);
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                _ocrProcessor.SetVariable(variable, storedOSD.ToString());
+            }
+
+
+            //_ocrProcessor.Clear();
+            //_ocrProcessor.ClearAdaptiveClassifier();
+
+            //using (Image bitmap = ToImage(image))
+            //{
+            //    //string result = _ocrProcessor.Apply(_fileName);
+            //    string result = _ocrProcessor.Apply(bitmap);
+
+            //    List<Word> detectedWords = _ocrProcessor.RetriveResultDetail();
+            //    this.UpdateImageViewer(detectedWords);
+
+            //    if (!string.IsNullOrEmpty(result))
+            //        MessageBox.Show(result);
+            //}
+        }
+
+        private void DoCommandDetectBlocks()
+        {
+            if (_image == null)
+                return;
+
+            ClearRenderingData();
+
+            DetectBlocks(_image);
+        }
+
+        private void DetectBlocks(IImage image)
+        {
+            string variable = "tessedit_pageseg_mode";
+            int storedOSD = 0;
+            _ocrProcessor.GetIntVariable(variable, ref storedOSD);
+            try
+            {
+                // Fully automatic page segmentation
+                int fully_psm_auto = 3;
+                _ocrProcessor.SetVariable(variable, fully_psm_auto.ToString());
+
+                _ocrProcessor.Clear();
+                _ocrProcessor.ClearAdaptiveClassifier();
+
+                using (Image bitmap = ToImage(image))
+                {
+                    BlockList blocks = _ocrProcessor.DetectBlocks(bitmap);
+                    this.UpdateImageViewer(blocks);
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                _ocrProcessor.SetVariable(variable, storedOSD.ToString());
             }
         }
         #endregion Analysis Commands
@@ -314,7 +432,18 @@ namespace Tesseract.OCR.AppEntry
             if (imageViewer.RenderingData != null &&
                     imageViewer.RenderingData is OCRRenderingData)
             {
+                //(imageViewer.RenderingData as OCRRenderingData).ShowDetectedCharacters = false;
                 (imageViewer.RenderingData as OCRRenderingData).WordList = detectedWords;
+                imageViewer.Invalidate(true);
+            }
+        }
+
+        private void UpdateImageViewer(BlockList blocks)
+        {
+            if (imageViewer.RenderingData != null &&
+                    imageViewer.RenderingData is OCRRenderingData)
+            {
+                (imageViewer.RenderingData as OCRRenderingData).Blocks = blocks;
                 imageViewer.Invalidate(true);
             }
         }
@@ -335,6 +464,16 @@ namespace Tesseract.OCR.AppEntry
             {
                 imageViewer.Location = new Point(x, y);
                 ctrl.Invalidate(true);
+            }
+        }
+
+        private void ClearRenderingData()
+        {
+            if (imageViewer.RenderingData != null &&
+                    imageViewer.RenderingData is OCRRenderingData)
+            {
+                (imageViewer.RenderingData as OCRRenderingData).ClearData();
+                imageViewer.Invalidate(true);
             }
         }
 

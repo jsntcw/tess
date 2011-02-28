@@ -211,6 +211,75 @@ void TesseractProcessor::End()
 
 
 
+// ===============================================================
+// GET/SET VARIABLES
+bool TesseractProcessor::GetBoolVariable(System::String* name, bool __gc* value)
+{
+	if (_apiInstance == NULL)
+		return false;
+
+	TessBaseAPI* api = (TessBaseAPI*)_apiInstance.ToPointer();
+
+	bool val = false;
+	bool succeed = api->GetBoolVariable(Helper::StringToPointer(name), &val);
+	*value = val;
+
+	return succeed;
+}
+
+bool TesseractProcessor::GetIntVariable(System::String* name, int __gc* value)
+{
+	if (_apiInstance == NULL)
+		return false;
+
+	TessBaseAPI* api = (TessBaseAPI*)_apiInstance.ToPointer();
+
+	int val = 0;
+	bool succeed = api->GetIntVariable(Helper::StringToPointer(name), &val);
+	*value = val;
+
+	return succeed;
+}
+
+bool TesseractProcessor::GetDoubleVariable(System::String* name, double __gc* value)
+{
+	if (_apiInstance == NULL)
+		return false;
+
+	TessBaseAPI* api = (TessBaseAPI*)_apiInstance.ToPointer();
+
+	double val = 0;
+	bool succeed = api->GetDoubleVariable(Helper::StringToPointer(name), &val);
+	*value = val;
+
+	return succeed;
+}
+
+System::String* TesseractProcessor::GetStringVariable(System::String* name)
+{
+	if (_apiInstance == NULL)
+		return false;
+
+	TessBaseAPI* api = (TessBaseAPI*)_apiInstance.ToPointer();
+
+	const char *value = api->GetStringVariable(Helper::StringToPointer(name));
+
+	return Helper::PointerToString(value);
+}
+
+bool TesseractProcessor::SetVariable(System::String* name, System::String* value)
+{
+	if (_apiInstance == NULL)
+		return false;
+
+	TessBaseAPI* api = (TessBaseAPI*)_apiInstance.ToPointer();
+	bool succeed = api->SetVariable(Helper::StringToPointer(name), Helper::StringToPointer(value));
+
+	return succeed;
+}
+// ===============================================================
+
+
 
 
 
@@ -220,11 +289,6 @@ void TesseractProcessor::End()
 
 
 // ===============================================================
-
-
-
-
-
 
 
 
@@ -232,6 +296,76 @@ void TesseractProcessor::End()
 
 // ===============================================================
 // PROCESS INTERFACE
+BlockList* TesseractProcessor::DetectBlocks(TessBaseAPI* api, Pix* pix)
+{
+	int imageHeight = pix->h;
+
+	api->SetImage(pix);
+	BLOCK_LIST *blockList = api->FindLinesCreateBlockList();
+	
+	List<RectBound*> *bounds = new List<RectBound*>();
+
+	BLOCK_IT b_it(blockList);
+	int blockCount = 0;
+	for (b_it.mark_cycle_pt(); !b_it.cycled_list(); b_it.forward())
+	{
+		BLOCK* block = b_it.data();
+		if (block == null)
+			continue;
+
+		const TBOX *box = &block->bounding_box();
+		int l = System::Math::Min(box->left(), box->right());
+		int r = System::Math::Max(box->left(), box->right());
+		int t = System::Math::Min(box->top(), box->bottom());
+		int b = System::Math::Max(box->top(), box->bottom());
+
+		bounds->Add(new RectBound(l, imageHeight - b, r, imageHeight - t));
+		blockCount++;
+	}
+
+	System::IntPtr blockListIntPtr = blockList;
+	BlockList* blks = new BlockList(blockListIntPtr, bounds, blockCount);
+
+	return blks;
+}
+
+BlockList* TesseractProcessor::DetectBlocks(System::Drawing::Image* image)
+{
+	if (_apiInstance == null)
+		return null;
+
+	TessBaseAPI* api = (TessBaseAPI*)_apiInstance.ToPointer();
+	Pix* pix = NULL;
+	BlockList* blks = null;
+
+	try
+	{
+		pix = PixFromImage(image);
+		blks = DetectBlocks(api, pix);
+	}
+	catch (System::Exception* exp)
+	{
+		if (blks != null)
+		{
+			blks->DeleteRawData();
+			blks = null;
+		}
+
+		throw exp;
+	}
+	__finally
+	{
+		api = null;
+		if (pix != null)
+		{
+			pixDestroy(&pix);
+			pix = null;
+		}
+	}
+
+	return blks;
+}
+
 String* TesseractProcessor::Apply(String* filePath)
 {
 	if (_apiInstance == null)
@@ -284,6 +418,14 @@ String* TesseractProcessor::Apply(System::Drawing::Image* image)
 
 String* TesseractProcessor::Apply(System::Drawing::Image* image, int l, int t, int w, int h)
 {
+	if (image == null)
+		throw new System::Exception("Input is invalid!");
+
+	if (l != 0 || t != 0 || w != image->Width || image->Height)
+	{
+		throw new System::Exception("Please crop image and try to call another method!");
+	}
+
 	String* result = "";
 	return result;
 }
@@ -467,6 +609,29 @@ Pix* TesseractProcessor::PixFromImage(System::Drawing::Image* image)
 
 
 // ===============================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ===============================================================
 

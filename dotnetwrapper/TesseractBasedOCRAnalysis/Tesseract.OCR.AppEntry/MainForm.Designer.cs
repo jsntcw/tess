@@ -47,13 +47,17 @@
             this.imageProcessingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.oCRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detectBlocksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnImageViewer = new System.Windows.Forms.Panel();
+            this.imageViewer = new IPoVn.UI.ImageViewer();
             this.mainToolbar = new System.Windows.Forms.ToolStrip();
             this.toolStripComboBoxLanguage = new System.Windows.Forms.ToolStripComboBox();
-            this.imageViewer = new IPoVn.UI.ImageViewer();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.mainMenu.SuspendLayout();
             this.pnImageViewer.SuspendLayout();
             this.mainToolbar.SuspendLayout();
@@ -156,7 +160,8 @@
             // analysisToolStripMenuItem
             // 
             this.analysisToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.oCRToolStripMenuItem});
+            this.oCRToolStripMenuItem,
+            this.detectBlocksToolStripMenuItem});
             this.analysisToolStripMenuItem.Name = "analysisToolStripMenuItem";
             this.analysisToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
             this.analysisToolStripMenuItem.Text = "Analysis";
@@ -164,8 +169,14 @@
             // oCRToolStripMenuItem
             // 
             this.oCRToolStripMenuItem.Name = "oCRToolStripMenuItem";
-            this.oCRToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.oCRToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.oCRToolStripMenuItem.Text = "OCR";
+            // 
+            // detectBlocksToolStripMenuItem
+            // 
+            this.detectBlocksToolStripMenuItem.Name = "detectBlocksToolStripMenuItem";
+            this.detectBlocksToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.detectBlocksToolStripMenuItem.Text = "Detect Blocks";
             // 
             // toolsToolStripMenuItem
             // 
@@ -198,10 +209,24 @@
             this.pnImageViewer.Size = new System.Drawing.Size(820, 466);
             this.pnImageViewer.TabIndex = 2;
             // 
+            // imageViewer
+            // 
+            this.imageViewer.Image = null;
+            this.imageViewer.Location = new System.Drawing.Point(28, 28);
+            this.imageViewer.Name = "imageViewer";
+            this.imageViewer.Render = null;
+            this.imageViewer.RenderingData = null;
+            this.imageViewer.Size = new System.Drawing.Size(122, 85);
+            this.imageViewer.TabIndex = 1;
+            this.imageViewer.Text = "imageViewer1";
+            // 
             // mainToolbar
             // 
             this.mainToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripComboBoxLanguage});
+            this.toolStripComboBoxLanguage,
+            this.toolStripButton1,
+            this.toolStripButton2,
+            this.toolStripButton3});
             this.mainToolbar.Location = new System.Drawing.Point(0, 24);
             this.mainToolbar.Name = "mainToolbar";
             this.mainToolbar.Size = new System.Drawing.Size(820, 25);
@@ -212,17 +237,52 @@
             // 
             this.toolStripComboBoxLanguage.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripComboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboBoxLanguage.Items.AddRange(new object[] {
+            "eng"});
             this.toolStripComboBoxLanguage.Name = "toolStripComboBoxLanguage";
             this.toolStripComboBoxLanguage.Size = new System.Drawing.Size(120, 25);
             // 
-            // imageViewer
+            // toolStripButton1
             // 
-            this.imageViewer.Image = null;
-            this.imageViewer.Location = new System.Drawing.Point(28, 28);
-            this.imageViewer.Name = "imageViewer";            
-            this.imageViewer.Size = new System.Drawing.Size(122, 85);
-            this.imageViewer.TabIndex = 1;
-            this.imageViewer.Text = "imageViewer1";
+            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton1.Checked = true;
+            this.toolStripButton1.CheckOnClick = true;
+            this.toolStripButton1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton1.ForeColor = System.Drawing.Color.Blue;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(99, 22);
+            this.toolStripButton1.Text = "Show Characters";
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton2.Checked = true;
+            this.toolStripButton2.CheckOnClick = true;
+            this.toolStripButton2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton2.ForeColor = System.Drawing.Color.Red;
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(77, 22);
+            this.toolStripButton2.Text = "Show Words";
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton3.Checked = true;
+            this.toolStripButton3.CheckOnClick = true;
+            this.toolStripButton3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton3.ForeColor = System.Drawing.Color.DarkGreen;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(77, 22);
+            this.toolStripButton3.Text = "Show Blocks";
             // 
             // MainForm
             // 
@@ -271,6 +331,10 @@
         private System.Windows.Forms.ToolStripMenuItem imageProcessingToolStripMenuItem;
         private System.Windows.Forms.ToolStrip mainToolbar;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBoxLanguage;
+        private System.Windows.Forms.ToolStripMenuItem detectBlocksToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
 
     }
 }
