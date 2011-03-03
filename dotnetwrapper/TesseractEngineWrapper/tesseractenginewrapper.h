@@ -33,6 +33,7 @@ limitations under the License.
 	using namespace System::Collections; \
 	using namespace System::Collections::Generic;
 
+#include "allheaders.h"
 #include "..\api\baseapi.h"
 #include "..\ccstruct\ocrblock.h"
 #include "..\ccutil\ocrclass.h"
